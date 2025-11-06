@@ -483,6 +483,9 @@ export function ConvAI({ variant = "default" }: ConvAIProps) {
     },
     onMessage: ({ message, source }) => {
       console.log({ message, source });
+      if (source === "agent" && typeof message === "string") {
+        void evaluateAgentMessage(message);
+      }
     },
   });
   const startConversation = React.useCallback(async () => {
@@ -1041,9 +1044,9 @@ export function ConvAI({ variant = "default" }: ConvAIProps) {
                 <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur">
                   <div className="flex flex-col gap-3">
                     <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-xs text-sky-100/80">
-                      * Ingresá tu número para comenzar.
+                      {"* Ingresá tu número para comenzar."}
                       <br />
-                      * Luego hacé clic en "Iniciar" y hablá con el voicebot.
+                      {"* Luego hacé clic en \"Iniciar\" y hablá con el voicebot."}
                     </div>
                     <div className="grid w-full gap-3 sm:grid-cols-2">
                       <Button
