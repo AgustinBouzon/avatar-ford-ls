@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { applyCors, handleCorsOptions } from "@/lib/cors";
 type CapturePayload = {
   phoneNumber?: string;
   imageBase64?: string;
@@ -6,29 +7,38 @@ type CapturePayload = {
   agentMessage?: string;
   instructions?: string;
 };
+export function OPTIONS() {
+  return handleCorsOptions();
+}
 export async function POST(request: Request) {
   let payload: CapturePayload;
   try {
     payload = await request.json();
   } catch {
-    return NextResponse.json(
-      { error: "Invalid JSON body" },
-      { status: 400 }
+    return applyCors(
+      NextResponse.json(
+        { error: "Invalid JSON body" },
+        { status: 400 }
+      )
     );
   }
   const endpoint = process.env.FORD_CAPTURE_ENDPOINT;
   if (!endpoint) {
-    return NextResponse.json(
-      { error: "FORD_CAPTURE_ENDPOINT is not configured" },
-      { status: 500 }
+    return applyCors(
+      NextResponse.json(
+        { error: "FORD_CAPTURE_ENDPOINT is not configured" },
+        { status: 500 }
+      )
     );
   }
   const phone = payload.phoneNumber?.trim();
   const imageBase64 = payload.imageBase64?.trim();
   if (!phone || !imageBase64) {
-    return NextResponse.json(
-      { error: "phoneNumber and imageBase64 are required" },
-      { status: 400 }
+    return applyCors(
+      NextResponse.json(
+        { error: "phoneNumber and imageBase64 are required" },
+        { status: 400 }
+      )
     );
   }
   const normalizedBase64 = imageBase64.replace(/^data:image\/[a-zA-Z+]+;base64,/, "");
@@ -62,19 +72,23 @@ export async function POST(request: Request) {
     } catch {
       // Leave as raw string if not JSON.
     }
-    return NextResponse.json(
-      {
-        success: response.ok,
-        status: response.status,
-        response: responseBody,
-      },
-      { status: response.ok ? 200 : 502 }
+    return applyCors(
+      NextResponse.json(
+        {
+          success: response.ok,
+          status: response.status,
+          response: responseBody,
+        },
+        { status: response.ok ? 200 : 502 }
+      )
     );
   } catch (error) {
     console.error("Capture forwarding error:", error);
-    return NextResponse.json(
-      { error: "Failed to forward capture payload" },
-      { status: 502 }
+    return applyCors(
+      NextResponse.json(
+        { error: "Failed to forward capture payload" },
+        { status: 502 }
+      )
     );
   }
 }

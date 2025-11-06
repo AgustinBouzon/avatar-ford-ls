@@ -30,6 +30,7 @@ const nextConfig: NextConfig = {
         pathname: "/companyimages/**",
       },
     ],
+    unoptimized: true,
   },
 };
 

@@ -1,5 +1,10 @@
-import { NextResponse } from "next/server";
 import { ElevenLabsClient } from "elevenlabs";
+import { NextResponse } from "next/server";
+import { applyCors, handleCorsOptions } from "@/lib/cors";
+
+export function OPTIONS() {
+  return handleCorsOptions();
+}
 
 export async function GET() {
   const agentId = process.env.AGENT_ID;
@@ -11,12 +16,14 @@ export async function GET() {
     const response = await client.conversationalAi.getSignedUrl({
       agent_id: agentId,
     });
-    return NextResponse.json({ signedUrl: response.signed_url });
+    return applyCors(NextResponse.json({ signedUrl: response.signed_url }));
   } catch (error) {
     console.error("Error:", error);
-    return NextResponse.json(
-      { error: "Failed to get signed URL" },
-      { status: 500 }
+    return applyCors(
+      NextResponse.json(
+        { error: "Failed to get signed URL" },
+        { status: 500 }
+      )
     );
   }
 }
