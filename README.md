@@ -29,3 +29,5 @@ docker compose up --build
 ```
 
 The app will be available on `http://localhost:3000`. Override the exposed port with `PORT=4000 docker compose up`.
+
+To provide secrets when deploying with Docker Compose, create a `.env` file alongside `docker-compose.yml` (following `.env.example`) and it will be loaded automatically via the `env_file` directive.
