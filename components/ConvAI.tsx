@@ -483,7 +483,7 @@ export function ConvAI({ variant = "default" }: ConvAIProps) {
     },
     onMessage: ({ message, source }) => {
       console.log({ message, source });
-      if (source === "agent" && typeof message === "string") {
+      if (source === "ai" && typeof message === "string") {
         void evaluateAgentMessage(message);
       }
     },
