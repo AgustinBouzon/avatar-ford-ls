@@ -1,7 +1,10 @@
 "use client";
 import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 export const BackgroundWave = () => {
+  const pathname = usePathname();
+  if (pathname?.startsWith("/test")) return null;
   const videoSrc = process.env.NEXT_PUBLIC_BACKGROUND_VIDEO_URL ?? "/background.mp4";
   return (
     <motion.video
