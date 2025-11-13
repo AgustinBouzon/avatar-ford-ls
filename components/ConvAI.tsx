@@ -192,7 +192,6 @@ export function ConvAI({ variant = "default" }: ConvAIProps) {
   const canvasRef = React.useRef<HTMLCanvasElement>(null)
   const streamRef = React.useRef<MediaStream | null>(null)
   const captureInFlightRef = React.useRef(false)
-  const lastAgentMessageRef = React.useRef<string | null>(null)
   const pendingCaptureRef = React.useRef<{
     source: "auto" | "manual"
     instructions?: string
@@ -450,9 +449,6 @@ export function ConvAI({ variant = "default" }: ConvAIProps) {
     },
     onMessage: ({ message, source }) => {
       console.log({ message, source })
-      if (source === "ai" && typeof message === "string") {
-        void evaluateAgentMessage(message)
-      }
     },
   })
   const startConversation = React.useCallback(async () => {
